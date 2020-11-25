@@ -8,6 +8,7 @@ import {client} from "./client"
 import Home from './components/home';
 import Header from './components/header';
 
+
 function App() {
   return (
     <ApolloProvider client={client}>

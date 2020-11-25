@@ -4,9 +4,7 @@ import React from "react";
 
 const Home = () => {
   const { loading, data } = useQuery(FETCH_POSTS_QUERY);
-
-
-    console.log(data);
+    // console.log(data);
     return (
       <>
         <div>
@@ -17,7 +15,7 @@ const Home = () => {
 }
 
 const FETCH_POSTS_QUERY = gql`
-  query 
+  { 
     getPosts {
       id
       body
@@ -35,7 +33,7 @@ const FETCH_POSTS_QUERY = gql`
         body
       }
     }
-  
+  }
 `;
  
 export default Home;

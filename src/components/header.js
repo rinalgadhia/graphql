@@ -12,21 +12,24 @@ const Header = () => {
             <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
               <div className="navbar-nav">
                 <li
-                  className="nav-item active mr-5"
+                  className="nav-item active mr-5 cursor-pointer"
+                  style={{ cursor: "pointer" }}
                   onClick={() => history.push("/")}
                 >
                   Home
                 </li>
                 <li
                   className="nav-item active"
+                  style={{ cursor: "pointer" }}
                   onClick={() => history.push("/login")}
                 >
                   Login
                 </li>
-                </div>
-                <div className="navbar-nav ml-auto">
+              </div>
+              <div className="navbar-nav ml-auto">
                 <li
                   className="nav-item active"
+                  style={{ cursor: "pointer" }}
                   onClick={() => history.push("/home")}
                 >
                   Logout

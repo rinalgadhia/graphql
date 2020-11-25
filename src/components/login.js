@@ -5,25 +5,61 @@ import {AUTH_TOKEN} from "../constants"
 import { gql, useMutation } from "@apollo/client"
 import { useHistory } from "react-router-dom";
 
- const SIGNUP_MUTATION = gql`
-   mutation SignupMutation(
-     $email: String!
-     $password: String!
-     $name: String!
-   ) {
-     signup(email: $email, password: $password, name: $name) {
-       token
-     }
-   }
- `;
+//  const SIGNUP_MUTATION = gql`
+//    mutation SignupMutation(
+//      $email: String!
+//      $password: String!
+//      $name: String!
+//    ) {
+//      signup(email: $email, password: $password, name: $name) {
+//        token
+//      }
+//    }
+//  `;
 
- const LOGIN_MUTATION = gql`
-   mutation LoginMutation($email: String!, $password: String!) {
-     login(email: $email, password: $password) {
-       token
-     }
-   }
- `;
+const SIGNUP_MUTATION = gql`
+  mutation register(
+    $username: String!
+    $email: String!
+    $password: String!
+    $confirmPassword: String!
+  ) {
+    register(
+      registerInput: {
+        username: $username
+        email: $email
+        password: $password
+        confirmPassword: $confirmPassword
+      }
+    ) {
+      id
+      email
+      username
+      createdAt
+      token
+    }
+  }
+`;
+
+//  const LOGIN_MUTATION = gql`
+//    mutation LoginMutation($email: String!, $password: String!) {
+//      login(email: $email, password: $password) {
+//        token
+//      }
+//    }
+//  `;
+
+const LOGIN_MUTATION = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      id
+      email
+      username
+      createdAt
+      token
+    }
+  }
+`;
 
 const Login = () => {
 
@@ -31,7 +67,8 @@ const Login = () => {
         login: true,
         email: "",
         password: "",
-        name: "",
+        confirmPassword: "",
+        username: "",
     }
 
     const history = useHistory();
@@ -45,7 +82,7 @@ const Login = () => {
         const _confirm = async (data) => {
           console.log(data)
           const token = data
-          state.login ? LoginMutation({variables: {email: state.email, password: state.password}}) : SignupMutation({variables: {email: state.email, password: state.password, name: state.name}});
+          state.login ? LoginMutation({variables: {username: state.username, password: state.password}}) : SignupMutation({variables: {username: state.username, email: state.email, password: state.password, confirmPassword: state.confirmPassword}});
           saveUserData(token);
           history.push("/");
         };
@@ -68,23 +105,23 @@ const Login = () => {
               </div>
 
               <div className="col-md-12 mt-5">
-                <div className={state.login ? "row d-none" : "row d-block"}>
+                <div className="row">
                   <div className="col-md-4 offset-md-4">
                     <div className="form-group">
-                      <label>Name</label>
+                      <label>UserName</label>
                       <input
                         type="text"
                         name="name"
                         className="form-control"
-                        value={state.name}
+                        value={state.username}
                         onChange={(e) =>
-                          setState({ ...state, name: e.target.value })
+                          setState({ ...state, username: e.target.value })
                         }
                       />
                     </div>
                   </div>
                 </div>
-                <div className="row">
+                <div className={state.login ? "row d-none" : "row d-block"}>
                   <div className="col-md-4 offset-md-4">
                     <div className="form-group">
                       <label>Email</label>
@@ -116,9 +153,28 @@ const Login = () => {
                     </div>
                   </div>
                 </div>
+                <div className={state.login ? "row d-none" : "row d-block"}>
+                  <div className="col-md-4 offset-md-4">
+                    <div className="form-group">
+                      <label>Confirm Password</label>
+                      <input
+                        type="password"
+                        name="confirmPassword"
+                        className="form-control"
+                        value={state.confirmPassword}
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            confirmPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="row">
                   <div className="col-md-2 offset-md-5">
-                      {/* <Mutation
+                    {/* <Mutation
                         mutation={state.login ? LOGIN_MUTATION : SIGNUP_MUTATION}
                         variables={ state.email, state.password, state.name }
                         onCompleted={data => _confirm(data)}
@@ -128,14 +184,27 @@ const Login = () => {
 
                       )}
                     </Mutation> */}
-                    
-                    <button className="btn btn-info" onClick={() => _confirm()}>{state.login ? "Login" : "Sign-up"}</button>
+
+                    <button className="btn btn-info" onClick={() => _confirm()}>
+                      {state.login ? "Login" : "Sign-up"}
+                    </button>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-4 offset-md-4">
-                    <span>{state.login ? "Don't have account? " : "Already Have an Account? "} </span>
-                    <span style={{ color: "#17a2b8", cursor: "pointer" }} onClick={() => setState({...state, login: !state.login})}>{state.login ? "SIGN UP" : "LOGIN"}</span>
+                    <span>
+                      {state.login
+                        ? "Don't have account? "
+                        : "Already Have an Account? "}{" "}
+                    </span>
+                    <span
+                      style={{ color: "#17a2b8", cursor: "pointer" }}
+                      onClick={() =>
+                        setState({ ...state, login: !state.login })
+                      }
+                    >
+                      {state.login ? "SIGN UP" : "LOGIN"}
+                    </span>
                   </div>
                 </div>
               </div>

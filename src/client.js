@@ -6,16 +6,16 @@ import {AUTH_TOKEN} from "./constants"
 import {createHttpLink} from "apollo-link-http"
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/"
+  uri: 'http://localhost:5000'
 });
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(() => {
   const token = localStorage.getItem(AUTH_TOKEN);
   return {
     headers: {
-      ...headers,
-      // authorization: token ? `Bearer ${token}` : "",
-      authorization: `Bearer [token]`,
+      // ...headers,
+      authorization: token ? `Bearer ${token}` : ''
+      // authorization: `Bearer [token]`,
     },
   };
 });
