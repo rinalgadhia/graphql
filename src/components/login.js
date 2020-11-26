@@ -1,21 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {AUTH_TOKEN} from "../constants"
-// import {Mutation} from "react-apollo"
-// import gql from "graphql-tag";
-import { gql, useMutation } from "@apollo/client"
-import { useHistory } from "react-router-dom";
 
-//  const SIGNUP_MUTATION = gql`
-//    mutation SignupMutation(
-//      $email: String!
-//      $password: String!
-//      $name: String!
-//    ) {
-//      signup(email: $email, password: $password, name: $name) {
-//        token
-//      }
-//    }
-//  `;
+import { gql, useMutation } from "@apollo/client"
+import { Redirect, useHistory } from "react-router-dom";
+import { AuthContext } from "../auth";
 
 const SIGNUP_MUTATION = gql`
   mutation register(
@@ -41,14 +29,6 @@ const SIGNUP_MUTATION = gql`
   }
 `;
 
-//  const LOGIN_MUTATION = gql`
-//    mutation LoginMutation($email: String!, $password: String!) {
-//      login(email: $email, password: $password) {
-//        token
-//      }
-//    }
-//  `;
-
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -72,25 +52,51 @@ const Login = () => {
     }
 
     const history = useHistory();
+    const context = useContext(AuthContext);
 
     const [state, setState] = useState(initialState); 
 
-        const [LoginMutation] = useMutation(LOGIN_MUTATION, {onCompleted: (data) => _confirm(data)})
-        const [SignupMutation] = useMutation(SIGNUP_MUTATION, {onCompleted: (data) => _confirm(data)})
-        // console.log(data)
+    const [LoginMutation] = useMutation(LOGIN_MUTATION, {
+      update(_, { data: { login: userData } }) 
+      {
+        context.login(userData)
+        history.push({pathname: "/home", state: userData});
+      },
+    });
+    
+    const [SignupMutation] = useMutation(SIGNUP_MUTATION, {
+      update(_, {data: { register: userData }})
+      {
+        context.login(userData)
+        history.push("/home")
+      }
+    });
+        
+        const login = () => {
+          state.login
+            ? LoginMutation({
+                variables: {
+                  username: state.username,
+                  password: state.password,
+                },
+              })
+            : SignupMutation({
+                variables: {
+                  username: state.username,
+                  email: state.email,
+                  password: state.password,
+                  confirmPassword: state.confirmPassword,
+                },
+              });
 
-        const _confirm = async (data) => {
-          console.log(data)
-          const token = data
-          state.login ? LoginMutation({variables: {username: state.username, password: state.password}}) : SignupMutation({variables: {username: state.username, email: state.email, password: state.password, confirmPassword: state.confirmPassword}});
-          saveUserData(token);
-          history.push("/");
-        };
-
-        const saveUserData = (token) => {
-          localStorage.setItem(AUTH_TOKEN, token)
         }
-
+    
+    if(localStorage.getItem(AUTH_TOKEN) !== null) 
+    {
+      return (
+        <Redirect to="/home" />
+      )
+    }
     return (
       <>
         <div className="main">
@@ -174,18 +180,7 @@ const Login = () => {
                 </div>
                 <div className="row">
                   <div className="col-md-2 offset-md-5">
-                    {/* <Mutation
-                        mutation={state.login ? LOGIN_MUTATION : SIGNUP_MUTATION}
-                        variables={ state.email, state.password, state.name }
-                        onCompleted={data => _confirm(data)}
-                    >
-                      {mutation => (
-                    <button className="btn btn-info" onClick={mutation}>{state.login ? "Login" : "Sign-up"}</button>
-
-                      )}
-                    </Mutation> */}
-
-                    <button className="btn btn-info" onClick={() => _confirm()}>
+                    <button className="btn btn-info" onClick={() => login()}>
                       {state.login ? "Login" : "Sign-up"}
                     </button>
                   </div>
@@ -195,7 +190,7 @@ const Login = () => {
                     <span>
                       {state.login
                         ? "Don't have account? "
-                        : "Already Have an Account? "}{" "}
+                        : "Already Have an Account? "}
                     </span>
                     <span
                       style={{ color: "#17a2b8", cursor: "pointer" }}

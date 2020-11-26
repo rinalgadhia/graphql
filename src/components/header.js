@@ -1,10 +1,15 @@
 import React from 'react';
+import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../auth';
+import { AUTH_TOKEN } from '../constants';
 
 const Header = () => {
 
     const history = useHistory();
-
+    const context = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+    let token = localStorage.getItem(AUTH_TOKEN);
     return (
       <>
         <header>
@@ -14,14 +19,14 @@ const Header = () => {
                 <li
                   className="nav-item active mr-5 cursor-pointer"
                   style={{ cursor: "pointer" }}
-                  onClick={() => history.push("/")}
+                  onClick={() => history.push("/home")}
                 >
-                  Home
+                  {token ? user.username : "Home"}
                 </li>
                 <li
-                  className="nav-item active"
+                  className={token ? "d-none" : "nav-item active d-block"}
                   style={{ cursor: "pointer" }}
-                  onClick={() => history.push("/login")}
+                  onClick={() => history.push("/")}
                 >
                   Login
                 </li>
@@ -30,7 +35,7 @@ const Header = () => {
                 <li
                   className="nav-item active"
                   style={{ cursor: "pointer" }}
-                  onClick={() => history.push("/home")}
+                  onClick={() => {history.push("/"); context.logout()}}
                 >
                   Logout
                 </li>

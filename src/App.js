@@ -7,19 +7,22 @@ import { ApolloProvider } from "@apollo/client";
 import {client} from "./client"
 import Home from './components/home';
 import Header from './components/header';
+import { AuthProvider } from './auth';
 
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <Router>
-          <Header />
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-        </Router>
-      </div>
-    </ApolloProvider>
+    <AuthProvider>
+      <ApolloProvider client={client}>
+        <div className="App">
+          <Router>
+            <Header />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/" component={Login} />
+          </Router>
+        </div>
+      </ApolloProvider>
+    </AuthProvider>
   );
 }
 
