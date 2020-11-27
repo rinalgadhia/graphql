@@ -19,7 +19,7 @@ const Header = () => {
     return (
       <>
         <header>
-          <div className="container">
+          <div className="container" style={{height: "70px"}}>
             <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
               <div className="navbar-nav">
                 <li
