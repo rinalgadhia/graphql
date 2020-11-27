@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../auth';
@@ -6,6 +6,12 @@ import { AUTH_TOKEN } from '../constants';
 
 const Header = () => {
 
+  const initialState = {
+    login: true,
+    home: false
+  }
+
+    const [state, setState] = useState(initialState)
     const history = useHistory();
     const context = useContext(AuthContext);
     const { user } = useContext(AuthContext);
@@ -17,14 +23,15 @@ const Header = () => {
             <nav className="navbar navbar-expand-lg navbar-light bg-white custom-navbar">
               <div className="navbar-nav">
                 <li
-                  className="nav-item active mr-5 cursor-pointer"
+                  className={token ? "nav-item active mr-5 cursor-pointer" : "nav-item mr-5 cursor-pointer"}
                   style={{ cursor: "pointer" }}
                   onClick={() => history.push("/home")}
                 >
                   {token ? user.username : "Home"}
+                  {/* Home */}
                 </li>
                 <li
-                  className={token ? "d-none" : "nav-item active d-block"}
+                  className={token ? "d-none" : state.login ? "nav-item active d-block" : "nave-item d-block"}
                   style={{ cursor: "pointer" }}
                   onClick={() => history.push("/")}
                 >
@@ -33,7 +40,7 @@ const Header = () => {
               </div>
               <div className="navbar-nav ml-auto">
                 <li
-                  className="nav-item active"
+                  className={token ? "d-block nav-item" : "d-none nav-item"}
                   style={{ cursor: "pointer" }}
                   onClick={() => {history.push("/"); context.logout()}}
                 >

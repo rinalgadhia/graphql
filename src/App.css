@@ -2,12 +2,32 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.custom-navbar {
+  height: 44px;
+  font-size: 17px;
+  border-bottom: 1px solid lightgray;
 }
 
+.navbar-nav {
+  flex-direction: row !important;
+}
 
+.nav-item {
+  padding: 17px 20px 8px 20px !important;
+  font-weight: 500;
+}
+
+.active {
+  color: teal;
+  border-bottom: 2px solid teal;
+  font-weight: 650;
+}
+
+@media (min-width: 576px) {
+  .custom-navbar {
+    height: 58px;
+  }
+}
 
 @keyframes App-logo-spin {
   from {

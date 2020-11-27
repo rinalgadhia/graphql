@@ -110,9 +110,9 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="col-md-12 mt-5">
+              <div className="col-md-4 offset-md-4 mt-5">
                 <div className="row">
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label>UserName</label>
                       <input
@@ -128,7 +128,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className={state.login ? "row d-none" : "row d-block"}>
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label>Email</label>
                       <input
@@ -144,7 +144,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label>Password</label>
                       <input
@@ -160,7 +160,7 @@ const Login = () => {
                   </div>
                 </div>
                 <div className={state.login ? "row d-none" : "row d-block"}>
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label>Confirm Password</label>
                       <input
@@ -179,14 +179,14 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-2 offset-md-5">
+                  <div className="col-md-8 offset-md-2">
                     <button className="btn btn-info" onClick={() => login()}>
                       {state.login ? "Login" : "Sign-up"}
                     </button>
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-12">
                     <span>
                       {state.login
                         ? "Don't have account? "
